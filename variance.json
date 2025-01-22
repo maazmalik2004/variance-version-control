@@ -1,0 +1,28 @@
+{
+    "files": {
+        "C:\\Users\\Maaz Malik\\Desktop\\Dspace-client\\book.txt": {
+            "versions": [
+                {
+                    "versionHash": "f043fd559228481edec40b5bf975d0316ec77a5401c53dd0460325c7ff6800c4",
+                    "virtualPath": "variance/f043fd559228481edec40b5bf975d0316ec77a5401c53dd0460325c7ff6800c4/book.txt",
+                    "timestamp": "2025-01-22T23:04:03.644Z",
+                    "stats": {
+                        "timeInMillis": 1324,
+                        "throughputMbps": "0.00",
+                        "sizeInMB": "0.00"
+                    }
+                },
+                {
+                    "versionHash": "7295feddaaa95894590087bf4b2eb8b7ae53ad4b3ca79b82bb9b98e003e76512",
+                    "virtualPath": "variance/7295feddaaa95894590087bf4b2eb8b7ae53ad4b3ca79b82bb9b98e003e76512/book.txt",
+                    "timestamp": "2025-01-22T23:04:33.481Z",
+                    "stats": {
+                        "timeInMillis": 756,
+                        "throughputMbps": "0.00",
+                        "sizeInMB": "0.00"
+                    }
+                }
+            ]
+        }
+    }
+}
