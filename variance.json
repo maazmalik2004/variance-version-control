@@ -1,26 +1,45 @@
 {
     "files": {
-        "C:\\Users\\Maaz Malik\\Desktop\\Dspace-client\\book.txt": {
+        "C:\\Users\\Maaz Malik\\Desktop\\variance\\dirr\\book.txt": {
             "versions": [
                 {
-                    "versionHash": "f043fd559228481edec40b5bf975d0316ec77a5401c53dd0460325c7ff6800c4",
-                    "virtualPath": "variance/f043fd559228481edec40b5bf975d0316ec77a5401c53dd0460325c7ff6800c4/book.txt",
-                    "timestamp": "2025-01-22T23:04:03.644Z",
-                    "stats": {
-                        "timeInMillis": 1324,
-                        "throughputMbps": "0.00",
-                        "sizeInMB": "0.00"
-                    }
+                    "versionHash": "a77546f008fb449543a960d709a86a58dfb1938954a5a372a41ab1d2b8f994ab",
+                    "message": "initial commit",
+                    "localPath": "C:\\Users\\Maaz Malik\\Desktop\\variance\\dirr\\book.txt",
+                    "virtualPath": "variance/a77546f008fb449543a960d709a86a58dfb1938954a5a372a41ab1d2b8f994ab/book.txt",
+                    "timestamp": "2025-01-28T18:18:35.384Z"
                 },
                 {
-                    "versionHash": "7295feddaaa95894590087bf4b2eb8b7ae53ad4b3ca79b82bb9b98e003e76512",
-                    "virtualPath": "variance/7295feddaaa95894590087bf4b2eb8b7ae53ad4b3ca79b82bb9b98e003e76512/book.txt",
-                    "timestamp": "2025-01-22T23:04:33.481Z",
-                    "stats": {
-                        "timeInMillis": 756,
-                        "throughputMbps": "0.00",
-                        "sizeInMB": "0.00"
-                    }
+                    "versionHash": "4d0839096d9a7a3f803a0e2cfb92ee3ef1d56be378e60f585798be4b92e7b908",
+                    "message": "initial commit",
+                    "localPath": "C:\\Users\\Maaz Malik\\Desktop\\variance\\dirr\\book.txt",
+                    "virtualPath": "variance/4d0839096d9a7a3f803a0e2cfb92ee3ef1d56be378e60f585798be4b92e7b908/book.txt",
+                    "timestamp": "2025-01-28T18:19:18.209Z"
+                },
+                {
+                    "versionHash": "88a8a25c1ff6439bc971172abad513613537e1f5ceb930f6e501e2609243742e",
+                    "message": "initial commit",
+                    "localPath": "C:\\Users\\Maaz Malik\\Desktop\\variance\\dirr\\book.txt",
+                    "virtualPath": "variance/88a8a25c1ff6439bc971172abad513613537e1f5ceb930f6e501e2609243742e/book.txt",
+                    "timestamp": "2025-01-28T18:21:21.413Z"
+                }
+            ]
+        },
+        "C:\\Users\\Maaz Malik\\Desktop\\variance\\ola\\hola\\myfile.txt": {
+            "versions": [
+                {
+                    "versionHash": "46ff82648c3c17a1e48f42292996f5128ea27759fd28e6d1ff194b43e3cd9334",
+                    "message": "initial finalization",
+                    "localPath": "C:\\Users\\Maaz Malik\\Desktop\\variance\\ola\\hola\\myfile.txt",
+                    "virtualPath": "variance/46ff82648c3c17a1e48f42292996f5128ea27759fd28e6d1ff194b43e3cd9334/myfile.txt",
+                    "timestamp": "2025-01-28T18:33:44.661Z"
+                },
+                {
+                    "versionHash": "7ec4fa3fce977e0f1c7242895d82168fb1a79bc010e896fae5291616e8c2b4c7",
+                    "message": "minor changes",
+                    "localPath": "C:\\Users\\Maaz Malik\\Desktop\\variance\\ola\\hola\\myfile.txt",
+                    "virtualPath": "variance/7ec4fa3fce977e0f1c7242895d82168fb1a79bc010e896fae5291616e8c2b4c7/myfile.txt",
+                    "timestamp": "2025-01-28T18:34:21.582Z"
                 }
             ]
         }

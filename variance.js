@@ -1,205 +1,26 @@
-// import fs from 'fs/promises';
-// import path from 'path';
-// import crypto from 'crypto';
-// import DspaceClient from './DspaceClient5.js'; // Assuming the provided class is in DspaceClient.js
-
-// const varianceFile = path.join(process.cwd(), 'variance.json');
-// const client = new DspaceClient();
-
-// class Variance {
-//     static async initialize() {
-//         try {
-//             await fs.access(varianceFile);
-//         } catch {
-//             await fs.writeFile(varianceFile, JSON.stringify({ files: {} }, null, 4));
-//         }
-//     }
-
-//     static async readVarianceData() {
-//         const data = await fs.readFile(varianceFile, 'utf8');
-//         return JSON.parse(data);
-//     }
-
-//     static async writeVarianceData(data) {
-//         await fs.writeFile(varianceFile, JSON.stringify(data, null, 4));
-//     }
-
-//     static async monitor(filename) {
-//         const absPath = path.resolve(filename);
-//         const data = await this.readVarianceData();
-
-//         if (data.files[absPath]) {
-//             console.log(`File "${filename}" is already being monitored.`);
-//             return;
-//         }
-
-//         data.files[absPath] = { versions: [] };
-//         await this.writeVarianceData(data);
-//         console.log(`File "${filename}" is now being monitored.`);
-//     }
-
-//     static async finalize(filename) {
-//         const absPath = path.resolve(filename);
-//         const data = await this.readVarianceData();
-
-//         if (!data.files[absPath]) {
-//             console.log(`File "${filename}" is not being monitored. Use "variance monitor" first.`);
-//             return;
-//         }
-
-//         const versionHash = crypto.createHash('sha256').update(Date.now().toString()).digest('hex');
-//         const virtualPath = `variance/${versionHash}/${path.basename(absPath)}`;
-//         const uploadStats = await client.upload(absPath, virtualPath);
-
-//         data.files[absPath].versions.push({
-//             versionHash,
-//             virtualPath,
-//             timestamp: new Date().toISOString(),
-//             stats: uploadStats
-//         });
-
-//         await this.writeVarianceData(data);
-//         console.log(`File "${filename}" finalized with version hash: ${versionHash}`);
-//     }
-
-//     static async show(filename) {
-//         const absPath = path.resolve(filename);
-//         const data = await this.readVarianceData();
-
-//         if (!data.files[absPath]) {
-//             console.log(`File "${filename}" is not being monitored.`);
-//             return;
-//         }
-
-//         console.log(`History for "${filename}":`);
-//         data.files[absPath].versions.forEach((version, index) => {
-//             console.log(`
-// Version ${index + 1}:
-// - Version Hash: ${version.versionHash}
-// - Virtual Path: ${version.virtualPath}
-// - Timestamp: ${version.timestamp}
-//             `);
-//         });
-//     }
-
-//     static async findIdByPath(data, targetPath) {
-//         // Normalize the targetPath
-//         const normalizedTargetPath = targetPath
-//             .replace(/[\\/]/g, '\\\\') // Replace both forward and backward slashes with double-backslashes
-//             .replace(/^\\\\|\\\\$/g, ''); // Remove leading/trailing double-backslashes
-    
-//         for (const item of data) {
-//             // Normalize the item's path
-//             const normalizedItemPath = item.path
-//                 .replace(/[\\/]/g, '\\\\') // Replace both forward and backward slashes with double-backslashes
-//                 .replace(/^\\\\|\\\\$/g, ''); // Remove leading/trailing double-backslashes
-    
-//             console.log("path x: ", normalizedItemPath);
-//             console.log("path y: ", normalizedTargetPath);
-    
-//             if (normalizedItemPath === normalizedTargetPath) {
-//                 return item.id;
-//             }
-    
-//             if (item.type === "directory" && item.children) {
-//                 const result = await this.findIdByPath(item.children, targetPath);
-//                 if (result) {
-//                     return result;
-//                 }
-//             }
-//         }
-    
-//         return null;
-//     }
-    
-    
-
-//     static async restore(versionHash) {
-//         const data = await this.readVarianceData();
-//         const fileEntry = Object.entries(data.files).find(([_, details]) =>
-//             details.versions.some(version => version.versionHash === versionHash)
-//         );
-
-//         if (!fileEntry) {
-//             console.log(`Version hash "${versionHash}" not found.`);
-//             return;
-//         }
-
-//         console.log("A")
-
-//         const [filePath, details] = fileEntry;
-//         const version = details.versions.find(v => v.versionHash === versionHash);
-
-//         console.log(filePath)
-//         console.log(version)
-
-//         let dir = await client.getUserDirectory()
-
-//         // console.log(dir)
-//         let id = await this.findIdByPath(dir.children, "root\\"+version.virtualPath)
-//         console.log("id : ",id)
-//         console.log("virtual path : ",version.virtualPath)
-//         const result = await client.retrieve(id);
-//         console.log(result)
-//         const restoredContent = await fs.readFile(result.path, 'utf8');
-//         await fs.writeFile(filePath, restoredContent);
-
-//         console.log(`File "${filePath}" restored to version "${versionHash}".`);
-//     }
-// }
-
-// // CLI
-// (async () => {
-//     await Variance.initialize();
-
-//     const [command, arg] = process.argv.slice(2);
-
-//     try {
-//         switch (command) {
-//             case 'monitor':
-//                 await Variance.monitor(arg);
-//                 break;
-//             case 'finalize':
-//                 await Variance.finalize(arg);
-//                 break;
-//             case 'show':
-//                 await Variance.show(arg);
-//                 break;
-//             case 'restore':
-//                 await Variance.restore(arg);
-//                 break;
-//             default:
-//                 console.log(`Unknown command: ${command}`);
-//                 console.log(`Available commands: monitor, finalize, show, restore`);
-//         }
-//     } catch (error) {
-//         console.error('An error occurred:', error.message);
-//     }
-// })();
-
 import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
-import DspaceClient from './DspaceClient5.js';
+import DspaceClient from './DspaceClient6.js';
 import { fileURLToPath } from 'url';
+import "colors";
+import { error } from 'console';
 
-class VarianceManager {
+class Variance {
     constructor() {
-        this.varianceFile = path.join(process.cwd(), 'variance.json');
+        this.varianceFilePath = path.join(process.cwd(), 'variance.json');
         this.client = new DspaceClient();
-    }
-
-    async initialize() {
-        try {
-            await fs.access(this.varianceFile);
-        } catch {
-            await this.writeVarianceData({ files: {} });
-        }
     }
 
     async readVarianceData() {
         try {
-            const data = await fs.readFile(this.varianceFile, 'utf8');
+            try {
+                await fs.access(this.varianceFilePath);
+            } catch (error) {
+                const defaultData = { "files": {} };
+                await fs.writeFile(this.varianceFilePath, JSON.stringify(defaultData, null, 2), 'utf8');
+            }
+            const data = await fs.readFile(this.varianceFilePath, 'utf8');
             return JSON.parse(data);
         } catch (error) {
             throw new Error(`Failed to read variance data: ${error.message}`);
@@ -208,115 +29,126 @@ class VarianceManager {
 
     async writeVarianceData(data) {
         try {
-            await fs.writeFile(this.varianceFile, JSON.stringify(data, null, 4));
+            await fs.writeFile(this.varianceFilePath, JSON.stringify(data, null, 4));
         } catch (error) {
             throw new Error(`Failed to write variance data: ${error.message}`);
         }
     }
 
-    async monitor(filename) {
-        if (!filename) {
-            throw new Error('Filename is required');
+    async readTextFile(filePath){
+        const content = await fs.readFile(filePath, 'utf-8');
+        return content
+    }
+
+    async monitor(filePath) {
+        console.log("[VARIANCE:MONITOR]")
+
+        filePath = path.resolve(this.normalizePath(filePath))
+
+        try{
+            await fs.access(filePath)
+        }catch(error){
+            throw new Error("FILE DOESN'T EXIST AT THE PROVIDED PATH. PLEASE PROVIDE A VALID PATH")
         }
 
-        const absPath = path.resolve(filename);
         const data = await this.readVarianceData();
 
-        if (data.files[absPath]) {
-            throw new Error(`File "${filename}" is already being monitored.`);
+        if (data.files[filePath]) {
+            throw new Error(`FILE "${filePath}" IS ALREADY BEING MONITORED FOR CHANGES`);
         }
 
-        data.files[absPath] = { versions: [] };
+        data.files[filePath] = { versions: [] };
+        
         await this.writeVarianceData(data);
-        return `File "${filename}" is now being monitored.`;
+        
+        console.log(`FILE "${filePath}" IS NOW BEING MONITORED FOR CHANGES`);
     }
 
-    async finalize(filename) {
-        if (!filename) {
-            throw new Error('Filename is required');
-        }
+    async finalize(filePath, message) {
+        console.log("[VARIANCE:FINALIZE]")
 
-        const absPath = path.resolve(filename);
+        filePath = path.resolve(this.normalizePath(filePath))
+
         const data = await this.readVarianceData();
 
-        if (!data.files[absPath]) {
-            throw new Error(`File "${filename}" is not being monitored. Use "variance monitor" first.`);
+        try{
+            await fs.access(filePath)
+        }catch(error){
+            throw new Error("FILE DOESN'T EXIST AT THE PROVIDED PATH. PLEASE PROVIDE A VALID PATH")
         }
 
-        try {
-            const versionHash = this.generateVersionHash();
-            const virtualPath = this.createVirtualPath(versionHash, absPath);
-            const uploadStats = await this.client.upload(absPath, virtualPath);
-
-            const version = {
-                versionHash,
-                virtualPath,
-                timestamp: new Date().toISOString(),
-                stats: uploadStats
-            };
-
-            data.files[absPath].versions.push(version);
-            await this.writeVarianceData(data);
-            return `File "${filename}" finalized with version hash: ${versionHash}`;
-        } catch (error) {
-            throw new Error(`Failed to finalize file: ${error.message}`);
-        }
-    }
-
-    async show(filename) {
-        if (!filename) {
-            throw new Error('Filename is required');
+        if (!data.files[filePath]) {
+            throw new Error(`FILE "${filePath}" IS NOT BEING MONITORED. USE | variance monitor <filePath>`);
         }
 
-        const absPath = path.resolve(filename);
-        const data = await this.readVarianceData();
+        const versionHash = this.generateVersionHash();
+        const virtualPath = this.createVirtualPath(versionHash, filePath);
+        console.log(virtualPath)
 
-        if (!data.files[absPath]) {
-            throw new Error(`File "${filename}" is not being monitored.`);
-        }
+        this.client.upload(filePath, virtualPath)
 
-        return data.files[absPath].versions.map((version, index) => ({
-            versionNumber: index + 1,
-            versionHash: version.versionHash,
-            virtualPath: version.virtualPath,
-            timestamp: version.timestamp
-        }));
+        const version = {
+            versionHash,
+            message,
+            localPath:filePath,
+            virtualPath,
+            timestamp: new Date().toISOString(),
+        };
+
+        data.files[filePath].versions.push(version);
+        await this.writeVarianceData(data);
+        console.log(`FILE "${filePath}" FINALIZED WITH VERSION HASH ${versionHash}`);
     }
 
     async restore(versionHash) {
-        if (!versionHash) {
-            throw new Error('Version hash is required');
-        }
+        console.log("[VARIANCE:RESTORE]")
 
         const data = await this.readVarianceData();
         const fileEntry = this.findFileEntryByVersionHash(data, versionHash);
 
         if (!fileEntry) {
-            throw new Error(`Version hash "${versionHash}" not found.`);
+            throw new Error(`VERSION "${versionHash}" NOT FOUND`);
         }
 
         const [filePath, details] = fileEntry;
         const version = details.versions.find(v => v.versionHash === versionHash);
 
-        try {
-            const directory = await this.client.getUserDirectory();
-            const id = await this.findIdByPath(directory.children, `root\\${version.virtualPath}`);
+        const localPath = version.localPath
+        try{
+            await fs.access(localPath)
 
-            if (!id) {
-                throw new Error('File ID not found in directory structure');
-            }
-
-            const result = await this.client.retrieve(id);
-            const restoredContent = await fs.readFile(result.path, 'utf8');
-            await fs.writeFile(filePath, restoredContent);
-
-            return `File "${filePath}" restored to version "${versionHash}".`;
-        } catch (error) {
-            throw new Error(`Failed to restore file: ${error.message}`);
+        }catch(error){
+            const dir = path.dirname(localPath)
+            await fs.mkdir(dir, {recursive:true})
+            await fs.writeFile(localPath, "", "utf-8")
         }
+        
+        const directory = await this.client.getUserDirectory();
+        const id = await this.findIdByPath(directory.children, `root\\${version.virtualPath}`);
+
+        if (!id) {
+            throw new Error('FILE ID COULD NOT BE RESOLVED. VERSION LOST');
+        }
+
+        const result = await this.client.retrieve(id);
+        const restoredContent = await fs.readFile(result.path, 'utf8');
+        await fs.writeFile(filePath, restoredContent);
+
+        console.log(`FILE "${filePath}" RESTORED TO VERSION ${versionHash} : ${version.message}"`);
+
+    }
+
+    async view(filePath) {
+        console.log("[VARIANCE:VIEW]")
+        filePath = path.resolve(this.normalizePath(filePath))
+        console.log(filePath)
+        const data = await this.readVarianceData();
+        const versions = data.files[filePath]
+        console.log(versions)
     }
 
     // Helper methods
+
     generateVersionHash() {
         return crypto.createHash('sha256')
             .update(Date.now().toString())
@@ -363,51 +195,45 @@ class VarianceManager {
 
 // CLI handler
 async function main() {
-    const manager = new VarianceManager();
-    await manager.initialize();
+    const manager = new Variance();
+    // extracting the last two arguments
+    const [command, arg, message] = process.argv.slice(2);
 
-    const [command, arg] = process.argv.slice(2);
-
-    try {
-        switch (command) {
-            case 'monitor':
-                console.log(await manager.monitor(arg));
-                break;
-            case 'finalize':
-                console.log(await manager.finalize(arg));
-                break;
-            case 'show':
-                const versions = await manager.show(arg);
-                console.log(`History for "${arg}":`);
-                versions.forEach(version => {
-                    console.log(`
-Version ${version.versionNumber}:
-- Version Hash: ${version.versionHash}
-- Virtual Path: ${version.virtualPath}
-- Timestamp: ${version.timestamp}
-                    `);
-                });
-                break;
-            case 'restore':
-                console.log(await manager.restore(arg));
-                break;
-            default:
-                console.log(`Unknown command: ${command}`);
-                console.log(`Available commands: monitor, finalize, show, restore`);
+    switch (command) {
+        case "help":
+            await manager.readTextFile("help.txt")
+            break;
+        case 'monitor':
+            if(!arg)throw new Error("NO VALID FILE PATH PROVIDED. CORRECT FORMAT | variance monitor <filePath>")
+            await manager.monitor(arg)
+            break;
+        case 'finalize':
+            if(!arg)throw new Error("NO VALID FILE PATH PROVIDED. CORRECT FORMAT | variance finalize <filePath> <message>")
+            if(!message)throw new Error("NO FINALIZATION MESSAGE PROVIDED. CORRECT FORMAT | variance finalize <filePath> <message>")
+            await manager.finalize(arg, message);
+            break;
+        case 'restore':
+            if(!arg)throw new Error("NO FINALIZATION HASH PROVIDED. CORRECT FORMAT | variance restore <hash>")
+            await manager.restore(arg)
+            break;
+        case 'view':
+            await manager.view(arg)
+            break;
+        default:
+            console.error(`
+NO SUCH COMMAND EXISTS | variance ${command}
+FOR LIST OF AVAILABLE COMMANDS, USE | variance help
+            `)
         }
-    } catch (error) {
-        console.error('Error:', error.message);
-        process.exit(1);
     }
-}
 
-// Check if this file is being run directly
-const isMainModule = fileURLToPath(import.meta.url) === process.argv[1];
+const isMainModule = import.meta.filename === process.argv[1];
 if (isMainModule) {
+    // this is known as promise chaining and is a perfectly valid way to use async functions
     main().catch(error => {
-        console.error('Fatal error:', error);
+        console.error(`
+[VARIANCE:ERROR] | ${error}
+        `)
         process.exit(1);
     });
 }
-
-export default VarianceManager;

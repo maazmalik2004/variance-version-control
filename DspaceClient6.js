@@ -6,12 +6,11 @@ import axios from 'axios';
 import FormData from 'form-data';
 import os from 'os';
 
-
 class DspaceClient {
     #serverBaseUrl;
     #defaultDownloadPath;
 
-    constructor(serverUrl = 'http://localhost:5000') {
+    constructor(serverUrl = 'https://dspace.maazmalik2004.space') {
         if (!serverUrl) {
             throw new Error('Server URL is required');
         }
@@ -26,24 +25,6 @@ class DspaceClient {
         return normalized;
     }
 
-    #calculateStats(sizeInBytes, timeInMillis) {
-        const throughputMbps = (sizeInBytes * 8 / 1000000) / (timeInMillis / 1000);
-        return {
-            timeInMillis,
-            throughputMbps: throughputMbps.toFixed(2),
-            sizeInMB: (sizeInBytes / 1000000).toFixed(2)
-        };
-    }
-
-    #logStats(operation, stats) {
-        console.log(`
-${operation} Statistics:
-- Time taken: ${stats.timeInMillis}ms
-- File size: ${stats.sizeInMB} MB
-- Throughput: ${stats.throughputMbps} Mbps
-        `);
-    }
-
     async upload(localPath, remotePath) {
         try {
             if (!localPath || !remotePath) {
@@ -55,16 +36,9 @@ ${operation} Statistics:
             const fullRemotePath = `root\\${normalizedRemotePath}`;
 
             const stat = await fs.stat(normalizedLocalPath);
-            let totalSize = 0;
-            let totalTime = 0;
 
             if (stat.isFile()) {
-                console.log(JSON.stringify({
-                    normalizedLocalPath, fullRemotePath
-                }))
-                const result = await this.#uploadFile(normalizedLocalPath, fullRemotePath);
-                totalSize += result.size;
-                totalTime += result.time;
+                await this.#uploadFile(normalizedLocalPath, fullRemotePath);
             } else if (stat.isDirectory()) {
                 const filePaths = [];
                 await this.#generateFilePaths(normalizedLocalPath, filePaths);
@@ -72,22 +46,11 @@ ${operation} Statistics:
                 for (const filePath of filePaths) {
                     const relativePath = this.#normalizePath(path.relative(normalizedLocalPath, filePath));
                     const fileRemotePath = this.#normalizePath(path.join(fullRemotePath, relativePath));
-                    console.log(JSON.stringify({
-                        fileRemotePath:fileRemotePath,
-                        filePath:filePath
-                    }))
-                    const result = await this.#uploadFile(filePath, fileRemotePath);
-                    totalSize += result.size;
-                    totalTime += result.time;
+                    await this.#uploadFile(filePath, fileRemotePath);
                 }
             } else {
                 throw new Error('Provided path is neither a file nor a folder');
             }
-
-            const stats = this.#calculateStats(totalSize, totalTime);
-            this.#logStats('Upload', stats);
-            return stats;
-
         } catch (error) {
             this.#error('Error in upload()', error);
             throw error;
@@ -112,23 +75,11 @@ ${operation} Statistics:
             form.append('directoryStructure', JSON.stringify(directoryStructure));
             form.append('files', f.createReadStream(normalizedLocalPath), path.basename(normalizedLocalPath));
 
-            const startTime = Date.now();
-            const response = await axios.post(`${this.#serverBaseUrl}/upload`, form, {
+            await axios.post(`${this.#serverBaseUrl}/upload`, form, {
                 headers: {
                     ...form.getHeaders()
                 }
             });
-            const endTime = Date.now();
-
-            if (!response) {
-                throw new Error('Failed to reach server');
-            }
-
-            const timeTaken = endTime - startTime;
-            const stats = this.#calculateStats(stat.size, timeTaken);
-            this.#logStats(`Upload - ${directoryStructure.name}`, stats);
-
-            return { size: stat.size, time: timeTaken };
         } catch (error) {
             this.#error('Error in #uploadFile()', error);
             throw error;
@@ -141,21 +92,17 @@ ${operation} Statistics:
                 throw new Error('Identifier is required');
             }
 
-            const startTime = Date.now();
             const response = await axios.get(`${this.#serverBaseUrl}/retrieve/${identifier}`, {
                 responseType: 'arraybuffer'
             });
-            const endTime = Date.now();
 
             const filename = this.#extractFilename(response.headers['content-disposition']) || 'default';
             const downloadPath = path.join(this.#defaultDownloadPath, filename);
             
             await fs.writeFile(downloadPath, response.data);
-            
-            const stats = this.#calculateStats(response.data.length, endTime - startTime);
-            this.#logStats('Download', stats);
 
-            return { path: downloadPath, stats };
+            return { path: downloadPath };
+
         } catch (error) {
             this.#error('Error in retrieve()', error);
             throw error;
@@ -169,7 +116,6 @@ ${operation} Statistics:
             }
 
             await axios.delete(`${this.#serverBaseUrl}/delete/${identifier}`);
-            console.log('Resource deleted successfully');
         } catch (error) {
             this.#error('Error in delete()', error);
             throw error;
@@ -180,14 +126,11 @@ ${operation} Statistics:
         try {
             const url = `${this.#serverBaseUrl}/directory`;
             const response = await axios.get(url);
-            // console.log(JSON.stringify(response.data, null, 3));
-            console.log(response.data)
-            return response.data.userDirectory
+            return response.data.userDirectory;
         } catch (error) {
             this.#error("Error in getUserDirectory()", error);
         }
     }
-
 
     async #generateFilePaths(directoryPath, filePaths) {
         const normalizedDirectoryPath = this.#normalizePath(directoryPath);
