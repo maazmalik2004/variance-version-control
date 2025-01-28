@@ -1,11 +1,7 @@
 # Variance- A lightweight version control for files, uncomplicated
 
-<div style="text-align: center;">
-    <img src="https://github.com/user-attachments/assets/4ff476e7-b287-425f-b68e-c31e36c472c1" width="500" height="500">
-</div>
-
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/4ff476e7-b287-425f-b68e-c31e36c472c1" width="300" height="200">
+    <img src="https://github.com/user-attachments/assets/4ff476e7-b287-425f-b68e-c31e36c472c1" width="400" height="400">
 </p>
 
 
