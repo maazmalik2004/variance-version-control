@@ -21,7 +21,7 @@ Variance is a simple and efficient version control system that tracks changes to
 
   variance monitor <filePath>     | adds the file at the specified file path to the list of files being monitored
   variance finalize <filePath>    | finalizes the changes to a remote location
-  variance retrieve <versionHash> | replaces the file being monitored with the version specified by the versionHash
+  variance restore <versionHash> | replaces the file being monitored with the version specified by the versionHash
   variance view <filePath>        | view the finalization history for a given file at the specified file path
 ```
 
