@@ -7,6 +7,12 @@
 
 Variance is a simple and efficient version control system that tracks changes to your files. Below is a basic walkthrough of how to use it.
 
+## 0)setup- you will require git and node set up on your computer
+```bash
+  >git clone https://github.com/maazmalik2004/variance-version-control.git
+  >npm install
+```
+
 ## 1)help command
 ```bash
   >node variance.js help
