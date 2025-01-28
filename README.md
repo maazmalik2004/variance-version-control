@@ -87,3 +87,8 @@ Variance is a simple and efficient version control system that tracks changes to
   [VARIANCE:RESTORE]
   FILE "C:\Users\Maaz Malik\Desktop\variance\test\test.txt" RESTORED TO VERSION a9e61615eb103a03f494869135dac1d54069f94cddb357821ca742d77c722672 : initial finalization"
 ```
+
+## 8)restored file changes in test/test.txt
+```test/test.txt
+  this is initial content
+```
