@@ -201,7 +201,7 @@ async function main() {
 
     switch (command) {
         case "help":
-            await manager.readTextFile("help.txt")
+            console.log(await manager.readTextFile("help.txt"))
             break;
         case 'monitor':
             if(!arg)throw new Error("NO VALID FILE PATH PROVIDED. CORRECT FORMAT | variance monitor <filePath>")
