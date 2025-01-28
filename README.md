@@ -1,6 +1,6 @@
 # Variance- A lightweight version control for files, uncomplicated
 
-![variance logo cropped](https://github.com/user-attachments/assets/8c5da804-86e3-4e98-b7b4-d5a052ee300a)
+![pixelcut-export](https://github.com/user-attachments/assets/4ff476e7-b287-425f-b68e-c31e36c472c1)
 
 Variance is a simple and efficient version control system that tracks changes to your files. Below is a basic walkthrough of how to use it.
 
