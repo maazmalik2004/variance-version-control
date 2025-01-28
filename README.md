@@ -1,10 +1,10 @@
-#Variance- A lightweight version control for files, uncomplicated
+# Variance- A lightweight version control for files, uncomplicated
 
 ![variance logo cropped](https://github.com/user-attachments/assets/8c5da804-86e3-4e98-b7b4-d5a052ee300a)
 
 Variance is a simple and efficient version control system that tracks changes to your files. Below is a basic walkthrough of how to use it.
 
-##1)help command
+## 1)help command
 ```bash
   >node variance.js help
 
@@ -16,12 +16,12 @@ Variance is a simple and efficient version control system that tracks changes to
   variance view <filePath>        | view the finalization history for a given file at the specified file path
 ```
 
-##2)create a file
+## 2)create a file test/test.txt
 ```test/test.txt
   this is initial content
 ```
 
-##3)add file to the list of files being monitored
+## 3)add file to the list of files being monitored
 ```bash
   >node variance.js monitor test/test.txt
 
@@ -29,7 +29,7 @@ Variance is a simple and efficient version control system that tracks changes to
   FILE "C:\Users\Maaz Malik\Desktop\variance\test\test.txt" IS NOW BEING MONITORED FOR CHANGES
 ```
 
-##3)finalize the file to remote
+## 3)finalize the file to remote
 ```bash
   >node variance.js finalize test/test.txt "initial finalization"
   
@@ -38,14 +38,14 @@ Variance is a simple and efficient version control system that tracks changes to
   FILE "C:\Users\Maaz Malik\Desktop\variance\test\test.txt" FINALIZED WITH VERSION HASH a9e61615eb103a03f494869135dac1d54069f94cddb357821ca742d77c722672
 ```
 
-##2)make changes to the file
+## 2)make changes to the file test/test.txt
 ```test/test.txt
   this is initial content
 
   first update
 ```
 
-##5)finalize the updated file to remote
+## 5)finalize the updated file to remote
 ```bash
   >node variance.js finalize test/test.txt "first update"
       
@@ -54,7 +54,7 @@ Variance is a simple and efficient version control system that tracks changes to
   FILE "C:\Users\Maaz Malik\Desktop\variance\test\test.txt" FINALIZED WITH VERSION HASH 1a7418504bb9b4dd6956351d264397a665179d8c35d4509a77a500c4eb911268
 ```
 
-##6)view version history
+## 6)view version history
 
 ```bash
   >node variance.js view test/test.txt
@@ -80,7 +80,7 @@ Variance is a simple and efficient version control system that tracks changes to
   }
 ```
 
-##7)restore any version
+## 7)restore any version
 ```bash
   >node variance.js restore a9e61615eb103a03f494869135dac1d54069f94cddb357821ca742d77c722672
 
