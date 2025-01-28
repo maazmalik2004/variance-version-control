@@ -2,6 +2,9 @@
 
 ![pixelcut-export](https://github.com/user-attachments/assets/4ff476e7-b287-425f-b68e-c31e36c472c1)
 
+<img src="https://github.com/user-attachments/assets/4ff476e7-b287-425f-b68e-c31e36c472c1" width="300" height="200">
+
+
 Variance is a simple and efficient version control system that tracks changes to your files. Below is a basic walkthrough of how to use it.
 
 ## 1)help command
