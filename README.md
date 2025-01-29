@@ -67,6 +67,7 @@ Variance is a simple and efficient version control system that tracks changes to
 
 ```bash
   >node variance.js view test/test.txt
+
   [VARIANCE:VIEW]
   C:\Users\Maaz Malik\Desktop\variance\test\test.txt
   {
